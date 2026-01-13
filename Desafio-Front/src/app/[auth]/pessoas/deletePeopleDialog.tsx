@@ -28,7 +28,6 @@ export function DeletePeopleDialog({
   const handleSubmit = async () => {
     const values = {
       peopleId: peopleId!,
-      userId: "90698B51-77EC-F011-A114-74563CF0FC1F",
     }
     deleteSelectedPeople.mutate(values)
   }

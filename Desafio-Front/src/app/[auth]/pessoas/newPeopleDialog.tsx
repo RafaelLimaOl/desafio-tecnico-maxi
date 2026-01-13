@@ -27,7 +27,7 @@ import z from "zod"
 
 const peopleDefaultValues = {
   peopleName: "",
-  age: "",
+  age: undefined,
 }
 
 export function NewPeopleDialog({ emptyData }: { emptyData: boolean }) {
@@ -92,7 +92,18 @@ export function NewPeopleDialog({ emptyData }: { emptyData: boolean }) {
                   <FormItem>
                     <FormLabel>Idade</FormLabel>
                     <FormControl>
-                      <Input placeholder="Idade" {...field} />
+                      <Input
+                        type="number"
+                        placeholder="Idade"
+                        value={String(field.value) ?? ""}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value === ""
+                              ? undefined
+                              : Number(e.target.value)
+                          )
+                        }
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

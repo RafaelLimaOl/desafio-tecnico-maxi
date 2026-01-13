@@ -1,3 +1,4 @@
+import { FormSelect } from "@/components/form-select"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -17,16 +18,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { useCreateCategory } from "@/hooks/useCategory"
-import { categoryTypeEnum, newCategorySchema } from "@/schema/newCategory"
+import { newCategorySchema } from "@/schema/newCategory"
+import { CategoryType } from "@/types/categoryResponse"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Plus } from "lucide-react"
 import { useForm } from "react-hook-form"
@@ -34,11 +29,29 @@ import z from "zod"
 
 const categoryDefaultValues = {
   description: "",
-  categoryType: categoryTypeEnum,
+  categoryType: CategoryType.DESPESA,
 }
 
 export function NewCategoryDialog({ emptyData }: { emptyData: boolean }) {
   const { createCategory } = useCreateCategory()
+
+  const typeCategory = [
+    {
+      id: 1,
+      label: "Despesa",
+      value: CategoryType.DESPESA,
+    },
+    {
+      id: 2,
+      label: "Receita",
+      value: CategoryType.RECEITA,
+    },
+    {
+      id: 3,
+      label: "Ambas",
+      value: CategoryType.AMBAS,
+    },
+  ]
 
   const form = useForm({
     resolver: zodResolver(newCategorySchema),
@@ -51,6 +64,8 @@ export function NewCategoryDialog({ emptyData }: { emptyData: boolean }) {
       categoryType: values.categoryType,
     }
     createCategory.mutate(newCategory)
+
+    form.reset()
   }
   return (
     <Dialog>
@@ -97,26 +112,15 @@ export function NewCategoryDialog({ emptyData }: { emptyData: boolean }) {
                 control={form.control}
                 name="categoryType"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Tipo de categoria</FormLabel>
-                    <FormControl>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger className="w-45">
-                          <SelectValue />
-                        </SelectTrigger>
-
-                        <SelectContent>
-                          <SelectItem value="DESPESA">Despesa</SelectItem>
-                          <SelectItem value="RECEITA">Receita</SelectItem>
-                          <SelectItem value="AMBAS">Ambas</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                  <FormSelect
+                    label="Finalidade"
+                    placeholder="Selecione..."
+                    options={typeCategory}
+                    value={field.value}
+                    onChange={field.onChange}
+                    getValue={(f) => f.value}
+                    getLabel={(f) => f.label}
+                  />
                 )}
               />
             </div>

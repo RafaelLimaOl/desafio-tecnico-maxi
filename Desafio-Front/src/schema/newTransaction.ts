@@ -11,7 +11,7 @@ export const newTransactionSchema = z.object({
     .min(2, "A descrição deve ter mais de 2 caracteres")
     .max(200, "A descrição não pode passar de 200 caracteres"),
 
-  amount: z.coerce.number().positive("O valor deve ser maior que zero"),
+  amount: z.coerce.number("Valor inválido").positive("O valor deve ser maior que zero"),
   peopleId: z
     .string("Pessoa inválida"),
 

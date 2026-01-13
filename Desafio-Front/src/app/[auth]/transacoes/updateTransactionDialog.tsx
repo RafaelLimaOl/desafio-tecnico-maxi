@@ -19,7 +19,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group"
 import { Label } from "@/components/ui/label"
 import {
   Select,
@@ -159,12 +164,22 @@ export function UpdateTransactionDialog({
                   <FormItem>
                     <FormLabel>Valor</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="Valor"
-                        value={field.value}
-                        onChange={(e) => field.onChange(e.target.value)}
-                      />
+                      <InputGroup>
+                        <InputGroupAddon>
+                          <InputGroupText>R$</InputGroupText>
+                        </InputGroupAddon>
+                        <InputGroupInput
+                          type="number"
+                          step="0.01"
+                          value={field.value}
+                          onChange={(e) => field.onChange(e.target.value)}
+                          name={field.name}
+                          ref={field.ref}
+                        />
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupText>Reais</InputGroupText>
+                        </InputGroupAddon>
+                      </InputGroup>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

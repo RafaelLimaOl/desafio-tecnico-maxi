@@ -79,7 +79,7 @@ export function NewTransactionDialog({
   const handleSubmit = async (values: z.infer<typeof newTransactionSchema>) => {
     const newTransaction = {
       description: values.description,
-      amount: values.amount,
+      amount: String(values.amount),
       transactionType: values.transactionType,
       status: TransactionStatus.PENDENTE,
       peopleId: values.peopleId,

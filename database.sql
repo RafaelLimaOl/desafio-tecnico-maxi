@@ -1,0 +1,73 @@
+/* TABELA USERS */
+CREATE TABLE Users (
+    Id UNIQUEIDENTIFIER NOT NULL DEFAULT NEWSEQUENTIALID(),
+    Email NVARCHAR(100) NOT NULL,
+    Username NVARCHAR(100) NOT NULL,
+    PasswordHash NVARCHAR(200) NOT NULL,
+    RefreshToken NVARCHAR(500) NULL,
+    RefreshTokenExpiryTime DATETIME2 NULL,
+    IsActive BIT NULL DEFAULT 1,
+    CreatedAt DATETIME2 NOT NULL DEFAULT GETDATE(),
+    CONSTRAINT PK_Users PRIMARY KEY (Id)
+);
+
+CREATE UNIQUE INDEX IX_Users_Email ON Users(Email);
+CREATE UNIQUE INDEX IX_Users_Username ON Users(Username);
+
+/* TABELA CATEGORIES */
+CREATE TABLE Categories (
+    Id UNIQUEIDENTIFIER NOT NULL DEFAULT NEWSEQUENTIALID(),
+    Description NVARCHAR(100) NOT NULL,
+    CategoryType INT NOT NULL,
+    IsActive BIT NULL DEFAULT 1,
+    UserId UNIQUEIDENTIFIER NOT NULL,
+    CreatedAt DATETIME2 NOT NULL DEFAULT GETDATE(),
+    CONSTRAINT PK_Categories PRIMARY KEY (Id),
+    CONSTRAINT FK_Categories_Users_UserId
+        FOREIGN KEY (UserId) REFERENCES Users(Id)
+        ON DELETE CASCADE
+);
+
+CREATE INDEX IX_Categories_UserId ON Categories(UserId);
+
+/* TABELA PEOPLES */
+CREATE TABLE Peoples (
+    Id UNIQUEIDENTIFIER NOT NULL DEFAULT NEWSEQUENTIALID(),
+    Name NVARCHAR(150) NOT NULL,
+    Age INT NOT NULL,
+    IsActive BIT NULL DEFAULT 1,
+    CreatedAt DATETIME2 NOT NULL DEFAULT GETDATE(),
+    UserId UNIQUEIDENTIFIER NOT NULL,
+    CONSTRAINT PK_Peoples PRIMARY KEY (Id),
+    CONSTRAINT FK_Peoples_Users_UserId
+        FOREIGN KEY (UserId) REFERENCES Users(Id)
+        ON DELETE CASCADE
+);
+
+CREATE INDEX IX_Peoples_UserId ON Peoples(UserId);
+
+/* TABELA TRANSACTIONS */
+CREATE TABLE Transactions (
+    Id UNIQUEIDENTIFIER NOT NULL DEFAULT NEWSEQUENTIALID(),
+    Description NVARCHAR(200) NOT NULL,
+    Amount DECIMAL(18,4) NOT NULL,
+    TransactionType INT NOT NULL,
+    PeopleId UNIQUEIDENTIFIER NOT NULL,
+    CategoryId UNIQUEIDENTIFIER NOT NULL,
+    UserId UNIQUEIDENTIFIER NOT NULL,
+    IsActive BIT NULL DEFAULT 1,
+    CreatedAt DATETIME2 NOT NULL DEFAULT GETDATE(),
+    Status INT NOT NULL,
+    CONSTRAINT PK_Transactions PRIMARY KEY (Id),
+
+    CONSTRAINT FK_Transactions_Categories_CategoryId
+        FOREIGN KEY (CategoryId) REFERENCES Categories(Id)
+        ON DELETE NO ACTION,
+
+    CONSTRAINT FK_Transactions_Peoples_PeopleId
+        FOREIGN KEY (PeopleId) REFERENCES Peoples(Id)
+        ON DELETE CASCADE
+);
+
+CREATE INDEX IX_Transactions_CategoryId ON Transactions(CategoryId);
+CREATE INDEX IX_Transactions_PeopleId ON Transactions(PeopleId);

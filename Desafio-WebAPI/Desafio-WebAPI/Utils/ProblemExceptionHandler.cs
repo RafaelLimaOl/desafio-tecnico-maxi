@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Desafio_WebAPI.Utils;
 
+// A estrutura de como ProblemExeption será utilizando e seus parâmetros: 
 [Serializable]
 public class ProblemExeption(string error, string message, int statusCode) : Exception(message)
 {
@@ -18,11 +19,13 @@ public class ProblemExceptionHandler(IProblemDetailsService problemDetailsServic
 
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
+        // Verifica se a exceção é do tipo ProblemExeption; do contrário este handler não a trata
         if (exception is not ProblemExeption problemExeption)
         {
             return true;
         }
 
+        // Parâmetros adicionados
         var problemDetails = new ProblemDetails
         {
             Status = problemExeption.StatusCode,
@@ -31,6 +34,7 @@ public class ProblemExceptionHandler(IProblemDetailsService problemDetailsServic
             Type = GetProblemType(problemExeption.StatusCode)
         };
 
+        // Valores atribuidos para ProblemDetails a partir da exceção, padronizando a resposta de erro
         httpContext.Response.StatusCode = problemExeption.StatusCode;
         return await _problemDetailsService.TryWriteAsync(
             new ProblemDetailsContext
@@ -41,6 +45,7 @@ public class ProblemExceptionHandler(IProblemDetailsService problemDetailsServic
         );
     }
 
+    // Lista dos possíveis erros retornados e suas mensagens customizadas
     private static string GetProblemType(int statusCode) => statusCode switch
     {
         StatusCodes.Status400BadRequest => "Requisição errada",

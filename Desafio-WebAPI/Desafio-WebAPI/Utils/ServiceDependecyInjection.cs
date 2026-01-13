@@ -7,6 +7,7 @@ public static class ServiceDependecyInjection
 {
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
+        // Adição das injeções de dependências de cada Serviço da aplicação
         services.AddScoped<IPeopleService, PeopleService>();
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IAuthService, AuthService>();

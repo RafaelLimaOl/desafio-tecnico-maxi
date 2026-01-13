@@ -7,6 +7,7 @@ public static class RepositoryDependencyInjection
 {
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
+        // Adição das injeções de dependências de cada Repositório da aplicação
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IPeopleRepository, PeopleRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
